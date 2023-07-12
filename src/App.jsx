@@ -36,7 +36,9 @@ function App() {
 
       {status === "loading" && <Loader />}
       {status === "error" && <Error />}
-      {status === "ready" && <StartScreen questions={questions} />}
+      {status === "ready" && (
+        <StartScreen dispatch={dispatch} questions={questions} />
+      )}
     </div>
   );
 }
