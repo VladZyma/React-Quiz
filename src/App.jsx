@@ -3,6 +3,7 @@ import { useReducer } from "react";
 import useQuestions from "./hooks/useQuestions";
 
 import Header from "./components/Header";
+import Main from "./components/Main";
 import StartScreen from "./components/StartScreen";
 import Loader from "./components/Loader";
 import Error from "./components/Error";
@@ -93,38 +94,39 @@ function App() {
   return (
     <div className="app">
       <Header />
-
-      {status === "loading" && <Loader />}
-      {status === "error" && <Error />}
-      {status === "ready" && (
-        <StartScreen dispatch={dispatch} questions={questions} />
-      )}
-      {status === "active" && (
-        <>
-          <Question
-            question={questions.at(index)}
-            dispatch={dispatch}
-            answer={answer}
-          />
-          <Footer>
-            <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
-            <NextButton
+      <Main>
+        {status === "loading" && <Loader />}
+        {status === "error" && <Error />}
+        {status === "ready" && (
+          <StartScreen dispatch={dispatch} questions={questions} />
+        )}
+        {status === "active" && (
+          <>
+            <Question
+              question={questions.at(index)}
               dispatch={dispatch}
               answer={answer}
-              index={index}
-              numQuestions={numQuestions}
             />
-          </Footer>
-        </>
-      )}
-      {status === "finished" && (
-        <FinishScreen
-          dispatch={dispatch}
-          points={points}
-          maxPoints={maxPoints}
-          highscore={highscore}
-        />
-      )}
+            <Footer>
+              <Timer dispatch={dispatch} secondsRemaining={secondsRemaining} />
+              <NextButton
+                dispatch={dispatch}
+                answer={answer}
+                index={index}
+                numQuestions={numQuestions}
+              />
+            </Footer>
+          </>
+        )}
+        {status === "finished" && (
+          <FinishScreen
+            dispatch={dispatch}
+            points={points}
+            maxPoints={maxPoints}
+            highscore={highscore}
+          />
+        )}
+      </Main>
     </div>
   );
 }
