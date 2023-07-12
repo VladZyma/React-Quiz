@@ -12,6 +12,7 @@ import Footer from "./components/Footer";
 import NextButton from "./components/NextButton";
 import FinishScreen from "./components/FinishScreen";
 import Timer from "./components/Timer";
+import Progress from "./components/Progress";
 
 const SEC_PER_QUESTIONS = 30;
 
@@ -102,6 +103,13 @@ function App() {
         )}
         {status === "active" && (
           <>
+            <Progress
+              index={index}
+              numQuestions={numQuestions}
+              points={maxPoints}
+              maxPoints={maxPoints}
+              answer={answer}
+            />
             <Question
               question={questions.at(index)}
               dispatch={dispatch}
