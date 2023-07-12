@@ -4,6 +4,8 @@ import useQuestions from "./hooks/useQuestions";
 
 import Header from "./components/Header";
 import StartScreen from "./components/StartScreen";
+import Loader from "./components/Loader";
+import Error from "./components/Error";
 
 const initialState = {
   questions: [],
@@ -24,7 +26,7 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { questions } = state;
+  const { questions, status } = state;
 
   useQuestions(dispatch);
 
@@ -32,7 +34,9 @@ function App() {
     <div className="app">
       <Header />
 
-      <StartScreen />
+      {status === "loading" && <Loader />}
+      {status === "error" && <Error />}
+      {status === "ready" && <StartScreen questions={questions} />}
     </div>
   );
 }
