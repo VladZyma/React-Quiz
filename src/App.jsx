@@ -7,6 +7,8 @@ import StartScreen from "./components/StartScreen";
 import Loader from "./components/Loader";
 import Error from "./components/Error";
 import Question from "./components/Question";
+import Footer from "./components/Footer";
+import NextButton from "./components/NextButton";
 
 const initialState = {
   questions: [],
@@ -35,6 +37,10 @@ function reducer(state, action) {
             ? state.points + question.points
             : state.points,
       };
+    case "nextQuestion":
+      return { ...state, index: state.index + 1, answer: null };
+    case "finish":
+      return { ...state, status: "finished" };
     default:
       throw new Error("Wrong action");
   }
@@ -43,6 +49,8 @@ function reducer(state, action) {
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { questions, status, index, answer } = state;
+
+  const numQuestions = questions.length;
 
   useQuestions(dispatch);
 
@@ -56,11 +64,21 @@ function App() {
         <StartScreen dispatch={dispatch} questions={questions} />
       )}
       {status === "active" && (
-        <Question
-          question={questions.at(index)}
-          dispatch={dispatch}
-          answer={answer}
-        />
+        <>
+          <Question
+            question={questions.at(index)}
+            dispatch={dispatch}
+            answer={answer}
+          />
+          <Footer>
+            <NextButton
+              dispatch={dispatch}
+              answer={answer}
+              index={index}
+              numQuestions={numQuestions}
+            />
+          </Footer>
+        </>
       )}
     </div>
   );
