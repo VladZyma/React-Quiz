@@ -6,11 +6,15 @@ import Header from "./components/Header";
 import StartScreen from "./components/StartScreen";
 import Loader from "./components/Loader";
 import Error from "./components/Error";
+import Question from "./components/Question";
 
 const initialState = {
   questions: [],
   //'loading', 'error', 'ready', 'active', 'finished'
   status: "loading",
+  index: 0,
+  answer: null,
+  points: 0,
 };
 
 function reducer(state, action) {
@@ -19,6 +23,18 @@ function reducer(state, action) {
       return { ...state, questions: action.payload, status: "ready" };
     case "dataFailed":
       return { ...state, status: "error" };
+    case "start":
+      return { ...state, status: "active" };
+    case "newAnswer":
+      const question = state.questions.at(state.index);
+      return {
+        ...state,
+        answer: action.payload,
+        points:
+          action.payload === question.correctOption
+            ? state.points + question.points
+            : state.points,
+      };
     default:
       throw new Error("Wrong action");
   }
@@ -26,7 +42,7 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { questions, status } = state;
+  const { questions, status, index, answer } = state;
 
   useQuestions(dispatch);
 
@@ -38,6 +54,13 @@ function App() {
       {status === "error" && <Error />}
       {status === "ready" && (
         <StartScreen dispatch={dispatch} questions={questions} />
+      )}
+      {status === "active" && (
+        <Question
+          question={questions.at(index)}
+          dispatch={dispatch}
+          answer={answer}
+        />
       )}
     </div>
   );
